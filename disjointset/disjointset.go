@@ -13,10 +13,8 @@ type DisjointSet interface {
 
 type Set struct{
 	rank int
-	//size int
+	//num array
 	parent *Set
-	//DisjointSet interface{}
-
 }
 
 // function MakeSet(x) is
@@ -27,38 +25,34 @@ type Set struct{
 //     end if
 // end function
 
-func MakeSet(x *Set) *Set{
-	s :=new(Set)
+func MakeSet() *Set{
+	s := new(Set)
 	s.parent = s
-	//s.size = 1
 	s.rank = 0
-	//s.value = x
 	return s
-} 
-// function Find(x) is
-//     if x.parent ≠ x then
-//         x.parent := Find(x.parent)
-//         return x.parent
-//     else
-//         return x
-//     end if
-// end function
-func FindSet(x *Set) *Set{
-	if x.parent != x{
-		x.parent = FindSet(x.parent)
-	}
-	
-	return x.parent
-	
 }
 
 
+
+func Find(x *Set) *Set{
+	if x.parent != x{
+		x.parent = Find(x.parent)
+	}
+	
+	return x.parent
+
+}
+func FindSet(x int) int{
+	
+	return x
+}
+
 //https://zh.wikipedia.org/wiki/%E5%B9%B6%E6%9F%A5%E9%9B%86
-func UnionSet(x, y *Set){
-	Node_X := FindSet(x)
-	Node_Y := FindSet(y)
+func Union(x , y *Set){
+	Node_X := Find(x)
+	Node_Y := Find(y)
 	if Node_X == Node_Y{
-		return //auto return NodeX && NodeY
+		return 
 	}
 
 
@@ -73,6 +67,10 @@ func UnionSet(x, y *Set){
 
 }
 
+func UnionSet(x, y int)int{
+	
+	return x
+}
 
 
 // TODO: implement a type that satisfies the DisjointSet interface.
@@ -80,16 +78,18 @@ func UnionSet(x, y *Set){
 // NewDisjointSet creates a struct of a type that satisfies the DisjointSet interface.
 func NewDisjointSet() DisjointSet {
 	// panic("TODO: implement this!")
+	var d DisjointSet
+	
+	//var DisSet = map[int]map[int]int{}  //may not need a nested map
+	DisSet := make(map[int]int) 
 
-	s :=new(Set)
-	s.parent = s
-	//s.size = 1
-	s.rank = 0
-	//s.value = x
-	// a :=FindSet(s)
-	// b :=FindSet(s)
-	// NewSet := UnionSet(a,b)
+	//try to find element from each key, after Union change the key name 
+	// for key, element := range DisSet{
+		
+	// }
 
-	return s
+
+
+	return d
 
 }
