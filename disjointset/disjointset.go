@@ -31,7 +31,6 @@ type Set struct{
 
 // NewDisjointSet creates a struct of a type that satisfies the DisjointSet interface.
 func NewDisjointSet() DisjointSet {
-	// panic("TODO: implement this!")
 	DisSet := make(map[int]int)
 	//rank := make(map[int]int)
 
@@ -54,6 +53,8 @@ func (ss Set) FindSet(x int) int{
 	// return ss.DisSet[x]
 	//https://stackoverflow.com/questions/2050391/how-to-check-if-a-map-contains-a-key-in-go
 	// check if a map contains a key
+	
+
 	if val, ok := ss.DisSet[x]; ok{ 
 		return val
 	}
