@@ -17,8 +17,8 @@ type DisjointSet interface {
 
 
 type Set struct{
-	s int
-	t int
+	// s int
+	// t int
 	DisSet map[int]int
 	Rank int
 	
@@ -35,7 +35,7 @@ func NewDisjointSet() DisjointSet {
 	DisSet := make(map[int]int)
 	//rank := make(map[int]int)
 
-	var d DisjointSet = Set{0,0,DisSet,0}
+	var d DisjointSet = Set{DisSet,0}
 
 	
 	//var DisSet = map[int]map[int]int{}  //may not need a nested map
@@ -67,11 +67,9 @@ func (ss Set) UnionSet(x, y int)int{
 	s := ss.FindSet(x)
 	t := ss.FindSet(y)
 	if s == t{
-		return s
+		return ss.DisSet[s]
 	}
-	
+
 	ss.DisSet[s] = t
-
 	return ss.DisSet[s]
-
 }
