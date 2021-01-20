@@ -35,40 +35,44 @@ func NewDisjointSet() DisjointSet {
 
 func (sets Collection) FindSet(num int) int {
 	// trace back the root of given num
-	for sets.parent[num] != 0 {
-		num = sets.parent[num]
+	for true {
+		if val, ok := sets.parent[num]; ok {
+			num = val
+		} else {
+			break
+		}
 	}
 
 	// reach the root and return it
-	return num	
+	return num
 }
 
 
 
 func (sets Collection) UnionSet(x, y int) int {
 	// find root of two numbers
-	rootA := FindSet(x)
-	rootB := FindSet(y)
+	rootA := sets.FindSet(x)
+	rootB := sets.FindSet(y)
 	// within the same set
 	if rootA == rootB {
 		return rootA
 	}
 
 	// get the rank for two trees
-	rankA = sets.rank[rootA]
-	rankB = sets.rank[rootB]
+	rankA := sets.rank[rootA]
+	rankB := sets.rank[rootB]
 
 	// append the shorter tree's root to the child of higher tree
 	if rankA > rankB {
 		sets.parent[rootB] = rootA
-		return rankA
+		return rootA
 	} else if rankA < rankB {
 		sets.parent[rootA] = rootB
-		return rankB
+		return rootB
 	} else {
 		sets.parent[rootA] = rootB
 		sets.rank[rootB] = rankB + 1
-		return rankB + 1
+		return rootB
 	}
 
 }
