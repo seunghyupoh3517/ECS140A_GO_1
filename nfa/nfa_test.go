@@ -60,6 +60,41 @@ func langTransitions(st state, sym rune) []state {
 	}[st][sym]
 }
 
+func manualTesting(st state, sym rune) []state {
+	/*
+	 * 0 -a-> 1
+	 * 0 -b-> 2
+	 * 0 -c-> 3
+	 * 0 -d-> 4 
+	 * 1 -a-> 2 
+	 * 1 -b-> 2 
+	 * 3 -a-> 2 
+	 * 3 -c-> 0
+	 * 4 -b-> 3 
+	 */
+	return map[state]map[rune][]state{
+		0: map[rune][]state{
+			'a': []state{1},
+			'b': []state{2},
+			'c': []state{3},
+			'd': []state{4},
+		},
+		1: map[rune][]state{
+			'a': []state{2},
+			'b': []state{2},
+		},
+		3: map[rune][]state{
+			'a': []state{2},
+			'c': []state{0},
+		},
+		4: map[rune][]state{
+			'b': []state{3},
+		},
+	}[st][sym]
+}
+
+
+
 func TestReachable(t *testing.T) {
 	tests := []struct {
 		label        string
@@ -91,6 +126,12 @@ func TestReachable(t *testing.T) {
 		{"langTransitions", langTransitions, 0, 0, []rune{'a', 'b', 'a', 'a'}, false},
 
 		// TODO add more tests for 100% test coverage
+		{"manualTesting", manualTesting, 0, 0, []rune{'d', 'b', 'a'}, false},
+		{"manualTesting", manualTesting, 0, 0, []rune{'d', 'b', 'a', 'a'}, false},
+		{"manualTesting", manualTesting, 0, 1, []rune{'c', 'b', 'c', 'b', 'a'}, false}, 
+		{"manualTesting", manualTesting, 0, 2, []rune{'c', 'a'}, true},
+		{"manualTesting", manualTesting, 0, 2, []rune{'c', 'a', 'b', 'c'}, false},
+		{"manualTesting", manualTesting, 4, 4, []rune{'b', 'c', 'd'}, true},
 	}
 
 	for _, test := range tests {

@@ -11,7 +11,6 @@ type state uint
 type TransitionFunction func(st state, act rune) []state
 
 // You may define helper functions here.
-
 func Reachable(
 	// `transitions` tells us what our NFA looks like
 	transitions TransitionFunction,
@@ -22,9 +21,9 @@ func Reachable(
 ) bool {
 	// TODO: Write the Reachable function,
 	// return true if the nfa accepts the input and can reach the final state with that input,
-	// return false otherwise
+	// return false otherwise - path by path or back tracking (same logic oppoite direction) needed
 
-	// Boundary condition - when no more symbols, paths, it's the last state where it could get
+	// Boundary condition - when no more symbols to transit, possibly empty list of symbols, it's the last state where it could get
 	if len(input) == 0 {
 		if start == final {
 			return true
@@ -33,10 +32,11 @@ func Reachable(
 		}
 	} else {
 		// assign the next state 
+		// (st state, sym rune) []state
 		next := transitions(start, input[0])
 		for i := 0; i < len(next); i++ {
 			start = next[i]
-			// Recursion call to backtrack states, with the 
+			// Recursion call to the next states
 			if Reachable(transitions, start, final, input[1:]){
 				return true
 			}
