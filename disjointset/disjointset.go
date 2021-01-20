@@ -16,12 +16,9 @@ type DisjointSet interface {
 
 
 
-type Set struct{
-	// s int
-	// t int
-	DisSet map[int]int
-	Rank int
-	
+type Collection struct{
+	parent map[int]int 		// map from node -> parent
+	rank map[int]int 		// map from node -> rank
 }
 
 
@@ -31,46 +28,51 @@ type Set struct{
 
 // NewDisjointSet creates a struct of a type that satisfies the DisjointSet interface.
 func NewDisjointSet() DisjointSet {
-	DisSet := make(map[int]int)
-	//rank := make(map[int]int)
-
-	var d DisjointSet = Set{DisSet,0}
-
-	
-	//var DisSet = map[int]map[int]int{}  //may not need a nested map
-
-
-	return d
-
+	// create two maps and pass to collection
+	var collection DisjointSet = Collection{make(map[int]int), make(map[int]int)}
+	return collection
 }
 
-func (ss Set) FindSet(x int) int{
-
-
-	// if x != ss.DisSet[x]{
-	// 	ss.DisSet[x] = ss.FindSet(ss.DisSet[x])
-	// }
-	// return ss.DisSet[x]
-	//https://stackoverflow.com/questions/2050391/how-to-check-if-a-map-contains-a-key-in-go
-	// check if a map contains a key
-	
-
-	if val, ok := ss.DisSet[x]; ok{ 
-		return val
+func (sets Collection) FindSet(num int) int {
+	// trace back the root of given num
+	for true {
+		if val, ok := sets.parent[num]; ok {
+			num = val
+		} else {
+			break
+		}
 	}
 
-	return x
+	// reach the root and return it
+	return num
 }
 
 
 
-func (ss Set) UnionSet(x, y int)int{
-	s := ss.FindSet(x)
-	t := ss.FindSet(y)
-	if s == t{
-		return ss.DisSet[s]
+func (sets Collection) UnionSet(x, y int) int {
+	// find root of two numbers
+	rootA := sets.FindSet(x)
+	rootB := sets.FindSet(y)
+	// within the same set
+	if rootA == rootB {
+		return rootA
 	}
 
-	ss.DisSet[s] = t
-	return ss.DisSet[s]
+	// get the rank for two trees
+	rankA := sets.rank[rootA]
+	rankB := sets.rank[rootB]
+
+	// append the shorter tree's root to the child of higher tree
+	if rankA > rankB {
+		sets.parent[rootB] = rootA
+		return rootA
+	} else if rankA < rankB {
+		sets.parent[rootA] = rootB
+		return rootB
+	} else {
+		sets.parent[rootA] = rootB
+		sets.rank[rootB] = rankB + 1
+		return rootB
+	}
+
 }

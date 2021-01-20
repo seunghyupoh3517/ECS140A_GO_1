@@ -57,6 +57,40 @@ func TestDisjointSetOddEven(t *testing.T) {
 	}()
 }
 
+func TestDisjointSetNEGAOddEven(t *testing.T) { //Odd Even negative set
+	rand.Seed(1)
+	func() {
+		defer func() {
+			if recover() != nil {
+				t.Errorf("TestDisjointSetNEGAOddEven panicked")
+			}
+		}()
+		s := NewDisjointSet()
+		const N = -1000 * 1000 //negative
+		// Union all even numbers
+		for i := -2; i > N; i -= 2 {
+			s.UnionSet(i, i+2)
+		}
+		// Union all odd numbers
+		for i := -3; i > N; i -= 2 {
+			s.UnionSet(i, i+2)
+		}
+		// Perform N random checks
+		for i := -1; i > N; i-- {
+			j := rand.Intn(-i)
+			k := -j //pass negative value from j to k
+			sameMod := i%2 == k%2
+			sameSet := s.FindSet(i) == s.FindSet(k)
+			if sameMod != sameSet {
+				t.Errorf("Expected %d and %d to be in the same set", i, k)
+			}
+		}
+	}()
+}
+
+
+
+
 type UnionSetStep struct {
 	a, b int
 }
@@ -76,6 +110,8 @@ var disjointSetTests = []struct {
 			FindSetCheck{3, 3, true},
 			FindSetCheck{2, 3, false},
 			FindSetCheck{6, 7, false},
+			FindSetCheck{6, 8, false},//add
+			FindSetCheck{-1, -1, true},//add
 		},
 	},
 	{
@@ -83,12 +119,16 @@ var disjointSetTests = []struct {
 			UnionSetStep{1, 2},
 			UnionSetStep{1, 3},
 			UnionSetStep{1, 4},
+			UnionSetStep{-1, -2},//add
+			UnionSetStep{-2, -3},//add
 		},
 		findSetChecks: []FindSetCheck{
 			FindSetCheck{2, 1, true},
 			FindSetCheck{2, 3, true},
 			FindSetCheck{2, 5, false},
 			FindSetCheck{6, 7, false},
+			FindSetCheck{-1, -2, true},//add
+			FindSetCheck{-1, -3, true},
 		},
 	},
 	{
@@ -129,11 +169,13 @@ var disjointSetTests = []struct {
 			UnionSetStep{6, 7},
 			UnionSetStep{7, 8},
 			UnionSetStep{8, 9},
+			UnionSetStep{-1, 3}, //add
 		},
 		findSetChecks: []FindSetCheck{
 			FindSetCheck{1, 5, false},
 			FindSetCheck{1, 4, true},
 			FindSetCheck{5, 8, true},
+			FindSetCheck{-1, 4, true}, //add
 		},
 	},
 }
